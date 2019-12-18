@@ -1,9 +1,7 @@
-import numpy as np
-import h5py
+import scipy.io as sio
 
 # First we need to load the data which is in matlab format
-dat = h5py.File('ratings.mat', 'r')
-ratings = dat.get('data/variable')
+ratings = sio.loadmat('ratings.mat')
 
 # Convert to numpy array
-ratings = np.array(ratings)
+X = ratings['X']
