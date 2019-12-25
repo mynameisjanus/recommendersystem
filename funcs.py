@@ -1,7 +1,7 @@
 from typing import NamedTuple, Tuple
 from matplotlib import pyplot as plt
 from matplotlib.patches import Circle, Arc
-
+import numpy as np
 
 class GaussianMixture(NamedTuple):
     """Tuple holding a gaussian mixture"""
