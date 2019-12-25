@@ -85,3 +85,39 @@ def run(X: np.ndarray, mixture: GaussianMixture,
             post, loglike = estep(X, mixture)
     return mixture, post, loglike
     raise NotImplementedError
+
+def fill_matrix(X: np.ndarray, mixture: GaussianMixture) -> np.ndarray:
+    """Fills an incomplete matrix according to a mixture model
+
+    Args:
+        X: (n, d) array of incomplete data (incomplete entries =0)
+        mixture: a mixture of gaussians
+
+    Returns
+        np.ndarray: a (n, d) array with completed data
+    """
+    n, d = X.shape
+    K, _ = mixture.mu.shape
+
+    mu = mixture.mu
+    var = mixture.var
+    p = mixture.p
+
+    delta = np.ma.array(X, mask = (X!=0)).filled(1)
+    dim = np.sum(delta, axis=1)
+
+    f_ui = np.zeros((n,K))
+    for i in range(n):
+            for j in range(K):
+                    f_ui[i,j] = np.log(p[j])-0.5*dim[i]*np.log(2*np.pi*var[j])-np.sum(delta[i,:]*(X[i,:]-mu[j])**2/(2*var[j]))
+
+    logsum = logsumexp(f_ui, axis=1)
+    post = np.exp((f_ui.T-logsum).T)
+
+    XM = np.ma.array(X, mask = (X != 0))
+    post_mu = np.dot(post, mu)
+    X2 = XM + post_mu
+    X2 = X2.filled(0)
+    X_pred = X + X2
+    return X_pred
+    raise NotImplementedError
