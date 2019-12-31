@@ -2,8 +2,7 @@
 from typing import Tuple
 import numpy as np
 from funcs import GaussianMixture
-
-
+from scipy.special import logsumexp
 
 def estep(X: np.ndarray, mixture: GaussianMixture) -> Tuple[np.ndarray, float]:
     """E-step: Softly assigns each datapoint to a gaussian component

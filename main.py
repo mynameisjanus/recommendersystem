@@ -16,4 +16,4 @@ for i in range(4):
                 mixture, post = funcs.init(X, K, seed = j)
                 mix, post, loglike = EM_algorithm.run(X, mixture, post)
                 log[i,j] = loglike
-        funcs.plot(X, mix, post, "GMM with K=" + str(K)).savefig("GMM" + str(K) + ".png")
+        funcs.plot(X, mix, post, "GMM with K=" + str(K))

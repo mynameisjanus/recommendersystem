@@ -10,8 +10,7 @@ class GaussianMixture(NamedTuple):
     p: np.ndarray  # (K, ) array = each row corresponds to the weight of a component
 
 
-def init(X: np.ndarray, K: int,
-         seed: int = 0) -> Tuple[GaussianMixture, np.ndarray]:
+def init(X: np.ndarray, K: int, seed: int = 0) -> Tuple[GaussianMixture, np.ndarray]:
     """Initializes the mixture model with random points as initial
     means and uniform assingments
 
@@ -74,7 +73,7 @@ def plot(X: np.ndarray, mixture: GaussianMixture, post: np.ndarray,
         sigma = np.sqrt(mixture.var[j])
         circle = Circle(mu, sigma, color=color[j], fill=False)
         ax.add_patch(circle)
-        legend = "mu = ({:0.2f}, {:0.2f})\n stdv = {:0.2f}".format(
+        legend = "mean = ({:0.2f}, {:0.2f})\n SD = {:0.2f}".format(
             mu[0], mu[1], sigma)
         ax.text(mu[0], mu[1], legend)
     plt.axis('equal')
