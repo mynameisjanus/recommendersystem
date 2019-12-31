@@ -23,7 +23,6 @@ def init(X: np.ndarray, K: int, seed: int = 0) -> Tuple[GaussianMixture, np.ndar
         mixture: the initialized gaussian mixture
         post: (n, K) array holding the soft counts
             for all components for all examples
-
     """
     np.random.seed(seed)
     n, _ = X.shape
@@ -76,5 +75,6 @@ def plot(X: np.ndarray, mixture: GaussianMixture, post: np.ndarray,
         legend = "mean = ({:0.2f}, {:0.2f})\n SD = {:0.2f}".format(
             mu[0], mu[1], sigma)
         ax.text(mu[0], mu[1], legend)
+    plt.legend()
     plt.axis('equal')
     plt.show()
