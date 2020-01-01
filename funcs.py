@@ -73,14 +73,15 @@ def plot(X: np.ndarray, mixture: GaussianMixture, post: np.ndarray,
                       edgecolor=color[j])
             ax.add_patch(arc)
             theta += offset
+    legend = []
     for j in range(K):
         mu = projected_mean[j]
         sigma = np.sqrt(mixture.var[j])
         circle = Circle(mu, sigma, color=color[j], fill=False)
         ax.add_patch(circle)
-        legend = "Mean = ({:0.2f}, {:0.2f})\n SD = {:0.2f}".format(
-            mu[0], mu[1], sigma)
-        ax.text(mu[0], mu[1], legend)
+        legend += "Mean = ("+str(mu[0])+","+str(mu[1])+"), SD = "+str(sigma)
+    #     legend += "Mean = ({:0.2f}, {:0.2f}), SD = {:0.2f}".format(mu[0], mu[1], sigma)
+    # plt.legend(labels = legend, fontsize = 'xx-small', handlelength = 0.25)
     plt.axis('equal')
     plt.xlabel('Principal Component 1')
     plt.ylabel('Principal Component 2')
