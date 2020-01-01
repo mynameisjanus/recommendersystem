@@ -2,12 +2,13 @@ from typing import NamedTuple, Tuple
 from matplotlib import pyplot as plt
 from matplotlib.patches import Circle, Arc
 import numpy as np
+from sklearn.decomposition import PCA
 
 class GaussianMixture(NamedTuple):
     """Tuple holding a gaussian mixture"""
     mu: np.ndarray  # (K, d) array - each row corresponds to a gaussian component mean
     var: np.ndarray  # (K, ) array - each row corresponds to the variance of a component
-    p: np.ndarray  # (K, ) array = each row corresponds to the weight of a component
+    p: np.ndarray  # (K, ) array - each row corresponds to the weight of a component
 
 
 def init(X: np.ndarray, K: int, seed: int = 0) -> Tuple[GaussianMixture, np.ndarray]:
@@ -44,9 +45,14 @@ def init(X: np.ndarray, K: int, seed: int = 0) -> Tuple[GaussianMixture, np.ndar
 
 def plot(X: np.ndarray, mixture: GaussianMixture, post: np.ndarray,
          title: str):
-    """Plots the mixture model for 2D data"""
+    """Plots the mixture model for two largest principal component"""
     _, K = post.shape
-
+    
+    pca = PCA(n_components = 2)
+    X_pca = pca.fit_transform(X)
+    P = pca.components_
+    projected_mean = mixture.mu @ P.T
+    
     percent = post / post.sum(axis=1).reshape(-1, 1)
     fig, ax = plt.subplots()
     ax.title.set_text(title)
@@ -54,7 +60,7 @@ def plot(X: np.ndarray, mixture: GaussianMixture, post: np.ndarray,
     ax.set_ylim((-20, 20))
     r = 0.25
     color = ["r", "b", "k", "y", "m", "c"]
-    for i, point in enumerate(X):
+    for i, point in enumerate(X_pca):
         theta = 0
         for j in range(K):
             offset = percent[i, j] * 360
@@ -68,13 +74,15 @@ def plot(X: np.ndarray, mixture: GaussianMixture, post: np.ndarray,
             ax.add_patch(arc)
             theta += offset
     for j in range(K):
-        mu = mixture.mu[j]
+        mu = projected_mean[j]
         sigma = np.sqrt(mixture.var[j])
         circle = Circle(mu, sigma, color=color[j], fill=False)
         ax.add_patch(circle)
-        legend = "mean = ({:0.2f}, {:0.2f})\n SD = {:0.2f}".format(
+        legend = "Mean = ({:0.2f}, {:0.2f})\n SD = {:0.2f}".format(
             mu[0], mu[1], sigma)
         ax.text(mu[0], mu[1], legend)
-    plt.legend()
     plt.axis('equal')
+    plt.xlabel('Principal Component 1')
+    plt.ylabel('Principal Component 2')
+    plt.savefig("K="+str(K)+".png", dpi=400)
     plt.show()
