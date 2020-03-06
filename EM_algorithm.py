@@ -25,7 +25,7 @@ def estep(X: np.ndarray, mixture: GaussianMixture) -> Tuple[np.ndarray, float]:
     p = mixture.p
     for i in range(n):
             for j in range(K):
-                    post1[i,j] = p[j]*(1/(np.sqrt((2*np.pi*var[j])**d)))*np.exp(-np.linalg.norm(X[i,:]-mu[j])**2/(2*var[j]))
+                    post1[i,j] = p[j]*(1/(np.sqrt((2*np.pi*var[j])**d)))*np.exp(-np.linalg.norm(X[i,:]-mu[j])**2/(2*var[j])) #same as norm.pdf
     post = post1 / post1.sum(axis=1, keepdims=True)
     pointlog = np.log(np.sum(post1,axis=1))
     loglike = np.sum(pointlog)

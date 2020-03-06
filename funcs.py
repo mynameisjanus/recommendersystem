@@ -35,7 +35,6 @@ def init(X: np.ndarray, K: int, seed: int = 0) -> Tuple[GaussianMixture, np.ndar
     # Compute variance
     for j in range(K):
         var[j] = ((X - mu[j])**2).mean()
-#        var[j] = np.maximum(0.25, var[j]) #added line
 
     mixture = GaussianMixture(mu, var, p)
     post = np.ones((n, K)) / K
